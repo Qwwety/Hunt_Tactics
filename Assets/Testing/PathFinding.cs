@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class PathFinding 
+public class PathFinding
 {
     private const int MoveStraightCost = 10;
     private const int MoveDiagonalCost = 14;
@@ -14,6 +14,7 @@ public class PathFinding
 
     private PathNode StartNode;
     private PathNode EndNode;
+    private int Count = 0;
 
     public PathFinding(CustomGrid customGrid)
     {
@@ -41,7 +42,7 @@ public class PathFinding
         StartNode.hCost = CalculateHCost(StartNode, EndNode);
         StartNode.CalculatefCost();
 
-        DFD();
+        //DFD();
 
 
         //while (OpenList.Count > 0)
@@ -80,31 +81,37 @@ public class PathFinding
     }
     public List<PathNode> DFD()
     {
-        List<PathNode> Take = new List<PathNode>();
-        List<PathNode> TentativePath = new List<PathNode>();
-        TentativePath.Add(StartNode);
-        PathNode CurentNode = StartNode;
-        while (CurentNode.GetNode() != EndNode.GetNode())
+        List<Vector3Int> TentativePath = new List<Vector3Int>();//Сорежит все клетки котрые использовал скрипт для нахождения Пути
+        List<PathNode> FinalPath = new List<PathNode>();// Клетки котрый программа будет успользовать для посторения маршрута 
+        FinalPath.Add(StartNode);
+        TentativePath.Add(StartNode.GetNode()) ;
+        PathNode CurrentNode = StartNode;
+        while /*(Count<=100)*/ (!TentativePath.Contains(EndNode.GetNode()))
         {
-            List<PathNode> Current = new List<PathNode>(); ;
-            foreach (PathNode NeighbourNode in GetNeighbourList(CurentNode))
+            List<PathNode> Current = new List<PathNode>();// клетки текущего масива
+            foreach (PathNode NeighbourNode in GetNeighbourList(CurrentNode))
             {
-                int tentativeGCost = CalculateHCost(CurentNode, NeighbourNode);// Находит GCost
-                int FCost =  CalculateHCost(NeighbourNode, EndNode) + tentativeGCost;// Fcost //+ CalculateHCost(RE, EndNode); CurentNode.gCost +
-                NeighbourNode.fCost = FCost;
-                NeighbourNode.hCost = FCost - tentativeGCost;
-                NeighbourNode.gCost = tentativeGCost;
-                if (!Take.Contains(NeighbourNode)) 
+                if (!TentativePath.Contains(NeighbourNode.GetNode()))
                 {
-                    Current.Add(NeighbourNode);
-                    Take.Add(NeighbourNode);
+                    int tentativeGCost = CalculateHCost(CurrentNode, NeighbourNode);// Находит GCost
+                    int FCost = CalculateHCost(NeighbourNode, EndNode) + tentativeGCost;
+                    NeighbourNode.fCost = FCost;
+                    NeighbourNode.hCost = FCost - tentativeGCost;
+                    NeighbourNode.gCost = tentativeGCost;
+                    NeighbourNode.IsWalkable = IsNodeWakable(NeighbourNode);
+                    if (NeighbourNode.IsWalkable == true)
+                    {
+                        Current.Add(NeighbourNode);
+                        TentativePath.Add(NeighbourNode.GetNode());
+                    }
                 }
             }
-            CurentNode = GetLowestFCostNode(Current);
-            TentativePath.Add(CurentNode);
+            CurrentNode = GetLowestFCostNode(Current);
+            FinalPath.Add(CurrentNode);
+            Count++;
         }
-        TentativePath.Add(EndNode);
-        return TentativePath;
+        FinalPath.Add(EndNode);
+        return FinalPath;
     }
     private PathNode GetNode(int x, int y)
     {
@@ -116,22 +123,36 @@ public class PathFinding
         int yDistance = Mathf.Abs(Start.y - End.y);
         int Remaining = Mathf.Abs(xDistance - yDistance);
         return MoveDiagonalCost * Mathf.Min(xDistance, yDistance) + MoveStraightCost * Remaining;
-    } 
+    }
     private PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
     {
         PathNode lowestFCostNode = pathNodeList[0];
         //List<PathNode> ListOfLowest= new List<PathNode>();
         for (int i = 1; i < pathNodeList.Count; i++)
         {
-            if (pathNodeList[i].fCost< lowestFCostNode.fCost)
+            if (pathNodeList[i].fCost == lowestFCostNode.fCost)
             {
-                lowestFCostNode=pathNodeList[i];
+                lowestFCostNode=GetLowestHCost(pathNodeList[i], lowestFCostNode);
                 //ListOfLowest.Add(lowestFCostNode);
 
+            }
+            else if (pathNodeList[i].fCost < lowestFCostNode.fCost)
+            {
+                lowestFCostNode = pathNodeList[i];
             }
         }
         return lowestFCostNode;
     } // Все должно быть кул
+
+    private PathNode GetLowestHCost(PathNode Fist, PathNode Second)
+    {
+        if (Fist.hCost > Second.hCost)
+        {
+            return Second;
+        }
+        return Fist;
+    }
+
     private List<PathNode> CalculatePath(PathNode EndNode)// Не доходит до этой функциии
     {
         List<PathNode> path = new List<PathNode>();
@@ -154,9 +175,9 @@ public class PathFinding
             // Left
             neighbourList.Add(GetNode(CurrentNode.x - 1, CurrentNode.y));
             //Left Down
-            if (CurrentNode.y - 1 >= 0) 
-            { 
-                neighbourList.Add(GetNode(CurrentNode.x - 1, CurrentNode.y - 1)); 
+            if (CurrentNode.y - 1 >= 0)
+            {
+                neighbourList.Add(GetNode(CurrentNode.x - 1, CurrentNode.y - 1));
             }
             //Left Up
             if (CurrentNode.y + 1 < customGrid.GetHeight())
@@ -187,7 +208,18 @@ public class PathFinding
         if (CurrentNode.y + 1 < customGrid.GetHeight())
         {
             neighbourList.Add(GetNode(CurrentNode.x, CurrentNode.y + 1));
-        } 
+        }
         return neighbourList;
+    }
+    private bool IsNodeWakable(PathNode PamPam)
+    {
+        if (customGrid.GetFloorTileMap().GetTile(PamPam.GetNode()) && !customGrid.GetObjectTileMap().GetTile(PamPam.GetNode()))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

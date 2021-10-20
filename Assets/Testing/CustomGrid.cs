@@ -13,27 +13,29 @@ public class CustomGrid : MonoBehaviour
     private int[,] GridArray; 
     private Grid Grid;
     private Tile[] Tiles;
-    private Tilemap Tilemap;
-    [Header("HeatMap")]
-    private const int HeatMapMaxValue = 100;
-    private const int HeatMapMinValue = 0;
+    private Tilemap FloorTilemap;
+    private Tilemap ObjectTilemap;
+    //[Header("HeatMap")]
+    //private const int HeatMapMaxValue = 100;
+    //private const int HeatMapMinValue = 0;
 
 
 
-    public CustomGrid(int Width, int Height, Grid Grid, Tile[] Tiles, Tilemap Tilemap)
+    public CustomGrid(int Width, int Height, Grid Grid, Tile[] Tiles, Tilemap FloorTilemap, Tilemap ObjectTilemap)
     {
         this.Width = Width;
         this.Height = Height;
         this.Grid = Grid;
         this.Tiles = Tiles;
-        this.Tilemap = Tilemap;
+        this.FloorTilemap = FloorTilemap;
+        this.ObjectTilemap = ObjectTilemap;
         GridArray = new int[Width, Height];
 
         for (int x = 0; x < GridArray.GetLength(0); x++)
         {
             for (int y = 0; y < GridArray.GetLength(1); y++)
             {
-                SetTile(x, y);
+                SetFloorTile(x, y);
                 // GetText(GridArray[x, y].ToString(), null, GetGridPosition(x,y), 5, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center, 50000);
                 //Debug.DrawLine(XYToIsometric(x, y), XYToIsometric(x, y + 1), Color.white, 100f);// отрисовка линий
                 //Debug.DrawLine(XYToIsometric(x, y), XYToIsometric(x + 1, y), Color.white, 100f);
@@ -59,63 +61,53 @@ public class CustomGrid : MonoBehaviour
         return Grid;
     }
 
-    public TextMesh GetText(string text, Transform parent, Vector3 localPosition, int FrontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int SortingOrder)
+    public Tilemap GetFloorTileMap()
     {
-        GameObject gameObject = new GameObject("World_Text", typeof(TextMesh));
-        Transform transform = gameObject.transform;
-        transform.SetParent(parent, false);
-        transform.localPosition = localPosition;
-        TextMesh textMesh = gameObject.GetComponent<TextMesh>();
-        textMesh.anchor = textAnchor;
-        textMesh.alignment = textAlignment;
-        textMesh.text = text;
-        textMesh.fontSize = FrontSize;
-        textMesh.color = color;
-        textMesh.GetComponent<MeshRenderer>().sortingOrder = SortingOrder;
-        return textMesh;
+        return FloorTilemap;
+    }
+    public Tilemap GetObjectTileMap()
+    {
+        return ObjectTilemap;
     }
 
-    private void SetTile(int x, int y)
+
+    private void SetFloorTile(int x, int y)
     {
         for (int i=0;i< Tiles.Length; i++)
         {
-            Tilemap.SetTile(new Vector3Int(x,y,0), Tiles[i]);
+            FloorTilemap.SetTile(new Vector3Int(x,y,0), Tiles[1]);
         }
     }
-    public void AddToTileMap(int x,int y,Tile tile)
+    public void AddToFloorTileMap(int x,int y,Tile tile)
     {
         Vector3Int MousePosition = new Vector3Int(x, y,0);
         if (MousePosition.x>=0 && MousePosition.y >= 0 && MousePosition.x < Width && MousePosition.y< Height)
         {
-                Tilemap.SetTile(MousePosition, tile);
-        }
-    }
-    public void SetHeatMap(Vector3Int MousePosition,int range, Tile tile)
-    {
-        for (int x = 0; x < range; x++)
-        {
-            for (int y = 0; y < range - x; y++)
-            {
-                AddToTileMap(MousePosition.x + x, MousePosition.y + y, tile);
-                if (x != 0)
-                {
-                    AddToTileMap(MousePosition.x - x, MousePosition.y + y, tile);
-                }
-                if (y != 0)
-                {
-                    AddToTileMap(MousePosition.x + x, MousePosition.y - y, tile);
-                    if (x != 0)
-                    {
-                        AddToTileMap(MousePosition.x - x, MousePosition.y - y, tile);
-                    }
-                }
-            }
+            FloorTilemap.SetTile(MousePosition, tile);
         }
     }
 
-    private Vector3Int GetGridPosition(int x,int y)
+    public void DelFromFloorTileMap(int x, int y)
     {
-        return new Vector3Int(x,y,0);
+        Vector3Int MousePosition = new Vector3Int(x, y, 0);
+        if (MousePosition.x >= 0 && MousePosition.y >= 0 && MousePosition.x < Width && MousePosition.y < Height)
+        {
+            FloorTilemap.SetTile(MousePosition, null);
+        }
+    }
+
+    public void AddToObjectTile(int x, int y, Tile tile)
+    {
+        Vector3Int MousePosition = new Vector3Int(x, y, 0);
+        if (MousePosition.x >= 0 && MousePosition.y >= 0 && MousePosition.x < Width && MousePosition.y < Height)
+        {
+            ObjectTilemap.SetTile(MousePosition, tile);
+        }
+    }
+
+    private Vector3Int GetGridPosition(int x, int y)
+    {
+        return new Vector3Int(x, y, 0);
         //return GetGridObject(x, y).x;
     }
 
@@ -123,7 +115,7 @@ public class CustomGrid : MonoBehaviour
     {
         if (x >= 0 && y >= 0 && x < Width && y < Height)
         {
-           return new Vector3Int(x,y,0);//Grid.WorldToCell(new Vector3Int(x, y, 0));
+            return new Vector3Int(x, y, 0);//Grid.WorldToCell(new Vector3Int(x, y, 0));
             //return Grid.WorldToCell(new Vector3Int(x, y, 0));
         }
         else
@@ -131,6 +123,31 @@ public class CustomGrid : MonoBehaviour
             return default(Vector3Int);
         }
     }
+
+    //public void SetHeatMap(Vector3Int MousePosition,int range, Tile tile)
+    //{
+    //    for (int x = 0; x < range; x++)
+    //    {
+    //        for (int y = 0; y < range - x; y++)
+    //        {
+    //            AddToFloorTileMap(MousePosition.x + x, MousePosition.y + y, tile);
+    //            if (x != 0)
+    //            {
+    //                AddToFloorTileMap(MousePosition.x - x, MousePosition.y + y, tile);
+    //            }
+    //            if (y != 0)
+    //            {
+    //                AddToFloorTileMap(MousePosition.x + x, MousePosition.y - y, tile);
+    //                if (x != 0)
+    //                {
+    //                    AddToFloorTileMap(MousePosition.x - x, MousePosition.y - y, tile);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+
+
 
     //public GameObject SetTile(Vector2 Position, GameObject Tile)
     //{
@@ -214,5 +231,20 @@ public class CustomGrid : MonoBehaviour
     //        }
     //    }
 
+    //}
+    //public TextMesh GetText(string text, Transform parent, Vector3 localPosition, int FrontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int SortingOrder)
+    //{
+    //    GameObject gameObject = new GameObject("World_Text", typeof(TextMesh));
+    //    Transform transform = gameObject.transform;
+    //    transform.SetParent(parent, false);
+    //    transform.localPosition = localPosition;
+    //    TextMesh textMesh = gameObject.GetComponent<TextMesh>();
+    //    textMesh.anchor = textAnchor;
+    //    textMesh.alignment = textAlignment;
+    //    textMesh.text = text;
+    //    textMesh.fontSize = FrontSize;
+    //    textMesh.color = color;
+    //    textMesh.GetComponent<MeshRenderer>().sortingOrder = SortingOrder;
+    //    return textMesh;
     //}
 }

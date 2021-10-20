@@ -12,16 +12,22 @@ public class PathNode
     public int hCost;//Heuristic cost shortest path to aim (ignore non walkable objects )
     public int fCost; //g+h
 
+    public bool IsWalkable;
     public PathNode CameFromNode;
 
     public PathNode( int x, int y)
     {
         this.x = x;
         this.y = y;
+        IsWalkable = true;
     }
-    public Vector2 GetNode()
+    //public T GetNode<T>(T dfsdf )
+    //{
+    //    return dfsdf;
+    //}
+    public Vector3Int GetNode()
     {
-        return new Vector2(x, y);
+        return new Vector3Int(x, y, 0);
     }
     public int CalculatefCost()
     {
