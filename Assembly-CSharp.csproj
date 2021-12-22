@@ -60,6 +60,8 @@
     <Compile Include="Assets\Scenes\Scripts\GridController.cs" />
     <Compile Include="Assets\Testing\Main\PathCell.cs" />
     <Compile Include="Assets\Character\Scripts\CharacterShooting.cs" />
+    <Compile Include="Assets\Character\Interfaces\ITakeDamage.cs" />
+    <Compile Include="Assets\Enemy\Scripts\Ebaka.cs" />
     <Compile Include="Assets\Testing\Basic\SetTheOrderOfMovement.cs" />
     <Compile Include="Assets\Character\AbstractClasses\CharacterClass.cs" />
     <Compile Include="Assets\Testing\Main\CustomGrid.cs" />
@@ -69,8 +71,9 @@
     <Compile Include="Assets\Character\Scripts\Behaviour\Idal.cs" />
     <Compile Include="Assets\Character\Specialists\FireEater\SpecialistScripts\FireEater.cs" />
     <Compile Include="Assets\Testing\Basic\GoToNextCharacter.cs" />
-    <Compile Include="Assets\Enemy\Scripts\Ebaka.cs" />
-    <Compile Include="Assets\Character\Interfaces\ITakeDamage.cs" />
+    <Compile Include="Assets\Menu\MainMenu\Scripts\ActivateMenu.cs" />
+    <Compile Include="Assets\Menu\MainMenu\Scripts\Effects.cs" />
+    <Compile Include="Assets\Menu\MainMenu\Scripts\GoToSelectedScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
