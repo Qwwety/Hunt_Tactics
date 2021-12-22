@@ -11,9 +11,16 @@ public class PathFinding
     private PathCell StartCell;
     private PathCell EndCell;
 
-    public PathFinding(CustomGrid customGrid)
+    private Vector3Int[] CharacterPositions;
+
+    public PathFinding(CustomGrid customGrid, Vector3Int[] CharacterPositions)
     {
         this.customGrid = customGrid;
+        this.CharacterPositions = CharacterPositions;
+    }
+    public void UpdateCharctersPositions(Vector3Int[] CharacterPositions)
+    {
+        this.CharacterPositions = CharacterPositions;
     }
 
     /// <summary>
@@ -215,7 +222,14 @@ public class PathFinding
     /// <returns></returns>
     private bool IsCellWakable(PathCell CurrentCell)
     {
-        if (customGrid.GetFloorTileMap().GetTile(CurrentCell.GetCellPosition()) && !customGrid.GetObjectTileMap().GetTile(CurrentCell.GetCellPosition()))
+        if (customGrid.GetFloorTileMap().GetTile(CurrentCell.GetCellPosition()
+            ) 
+            && !customGrid.GetObjectTileMap().GetTile(CurrentCell.GetCellPosition()) 
+
+            && IsCellAllreadyOccupied(CurrentCell) == false
+
+            )
+
         {
             return true;
         }
@@ -223,5 +237,19 @@ public class PathFinding
         {
             return false;
         }
+    }
+
+    private bool IsCellAllreadyOccupied(PathCell CurrentCell)
+    {
+        foreach (Vector3Int Char in CharacterPositions)
+        {
+            if (CurrentCell.GetCellPosition() == new Vector3Int(Char.x, Char.y,0))
+            {
+                return true;
+                break;
+            }
+            
+        }
+        return false;
     }
 }

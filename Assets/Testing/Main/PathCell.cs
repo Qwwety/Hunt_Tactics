@@ -10,6 +10,7 @@ public class PathCell
     public int hCost;//Heuristic cost shortest path to aim (ignore non walkable objects )
     public int fCost; //g+h
 
+
     public bool IsWalkable;
     public PathCell CameFromCell;
 

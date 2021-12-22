@@ -2,10 +2,17 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 
-public class Testing : MonoBehaviour //Короче надо сделать номальное перемешение, его пидорит шо пиздецй, на это като выиляет скорость ходьбы, но не особо, проверить ячейки в  PathCells, иб там проеб
-                                     // и доделать смену персонажа
-                                     // давай дурачок удачи
+public class Testing : MonoBehaviour //Сделать меню и запихнуть- назначение цены, как и саму цену, тип специалиста/класс, позитивные/негативные парки в интерфейс/ы, как и их назначение
+                                     // Чтобы враги могли тоже наследоваться от этого класа
+                                     // сделать возможнозть атаковать 
+                                     //
+                                     // крестик для возврата в меню и что бы при наведение, в хабе, здания выделялись
+                                     // 
+                                     //и мне не нравиться  OrderOfMovement- она нужна только для срабатывания ее конструктора и все, надо придумать как выкинуть ее
+                                     //
+                                     //давай,Кирилл, удачи
 {
     public static Testing Instance;
 
@@ -24,14 +31,19 @@ public class Testing : MonoBehaviour //Короче надо сделать но
     [SerializeField] private ShowActiveCells InterfaceTilemap;
 
     [Header("OrderOfMovement")]
+    [SerializeField] private List<CharacterClass> CharactersClases;
+    private Vector3Int[] CharactersPositions;
+
     private SetTheOrderOfMovement OrderOfMovement;
+
 
     [Header("Movement")]
     [SerializeField] private CharacterClass Character;
-    [SerializeField] private CharacterMovement ControlledСharacter;
+    [SerializeField] private CharacterMovement CharacterMovement;
     [SerializeField] private int MaxMovemetDistance;
 
     [Header("Attack")]
+    [SerializeField] private CharacterShooting CharacterShooting;
     [SerializeField] private int MaxAttackRange;
 
 
@@ -41,48 +53,70 @@ public class Testing : MonoBehaviour //Короче надо сделать но
 
     private Vector3Int Pos;
     private List<Vector3Int> PathCells = new List<Vector3Int>(30);
-    private int Index = 0;
 
-    private int Num = 0;
+    private int CharacterNumber = 0;
+
+
 
 
     private void Awake()
     {
         Instance = this;
     }
+
     void Start()
     {
 
         Grid = gameObject.GetComponent<Grid>();
 
         customGrid = new CustomGrid(Width, Height, Grid, Tiles, FloorTilemap, ObjectTilemap);
-        PathFinding = new PathFinding(customGrid);
 
-        OrderOfMovement = GetComponent<SetTheOrderOfMovement>();
-        OrderOfMovement.ActivateQueueSort();
+        GetCharacterPosition();
+
+        PathFinding = new PathFinding(customGrid, CharactersPositions);
+
+        OrderOfMovement = new SetTheOrderOfMovement(CharactersClases);
+
         SetNewCharcter();
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && ControlledСharacter.CanSetANewPoint() == false)
+        if (Input.GetMouseButtonDown(0) /*&& CharacterMovement.CanSetANewPoint() == false*/)
         {
             Pos = GetMouseosition();
-            Vector3Int CharacterPosition = ControlledСharacter.GetCharacterPosition();
-            if (Pos.x < Width && Pos.y < Height && Pos.x >= 0 && Pos.y >= 0 && PathFinding.FindPath(CharacterPosition, new Vector3Int(Pos.x, Pos.y, 0)).Count <= MaxMovemetDistance)
+            Vector3Int CharacterPosition = CharacterMovement.GetCharacterPosition();
+            try
             {
-                TrySetCells(PathFinding.FindPath(ControlledСharacter.GetCharacterPosition(), Pos));
-                GoToNextPosition();
+                if (Pos.x < Width && Pos.y < Height && Pos.x >= 0 && Pos.y >= 0 && PathFinding.FindPath(CharacterPosition, new Vector3Int(Pos.x, Pos.y, 0)).Count <= MaxMovemetDistance)
+                {
+                    TrySetCells(PathFinding.FindPath(CharacterPosition, Pos));
+
+                    GoToNextPosition();
+                }
+            }
+            catch
+            {
+                Debug.Log("нельзая добраться до даннйо клетки");
             }
 
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            if (Pos.x < Width && Pos.y < Height && Pos.x >= 0 && Pos.y >= 0)
+            Pos = GetMouseosition();
+            Vector3Int CharacterPosition = CharacterMovement.GetCharacterPosition();
+            Vector3 ClickPosition = Pos - CharacterPosition;
+            //float Dist = Vector3Int.Distance(CharacterPosition, Pos);
+
+            try
             {
-                //MarkWalk();
+                if (Pos.x < Width && Pos.y < Height && Pos.x >= 0 && Pos.y >= 0 && Pos!= CharacterPosition && Math.Abs(ClickPosition.x) <= MaxAttackRange && Math.Abs(ClickPosition.y) <= MaxAttackRange)
+                {
+                    TryToAttack(Pos);
+                }
             }
+            catch { }
         }
     }
 
@@ -95,12 +129,13 @@ public class Testing : MonoBehaviour //Короче надо сделать но
 
         if (Cells.Count > 0)
         {
-            //Index = 0;
             PathCells.Clear();
+
             foreach (Vector3Int Cell in Cells)
             {
                 PathCells.Add(Cell);
             }
+
         }
         else
         {
@@ -129,34 +164,55 @@ public class Testing : MonoBehaviour //Короче надо сделать но
     /// <param name="IndexPosition"></param>
     private void TrySetNewPosition()
     {
-        if (Index < PathCells.Count)
+        int Index = 0;
+        bool IsLastPointReached = false;
+
+        while (IsLastPointReached != true)
         {
+            Vector3 CharacterPosition = CharacterMovement.GetCharacterPosition();
+            Vector3 TargetPos = new Vector3Int(PathCells[Index].x, PathCells[Index].y, PathCells[Index].z);
 
-            Vector3 Converted = Grid.CellToLocal(new Vector3Int(PathCells[Index].x, PathCells[Index].y, PathCells[Index].z));
-            Vector3 CellPosition = new Vector3(Converted.x, Converted.y, Converted.z);
-            ControlledСharacter.SetCellToMove(CellPosition);
-            Index++;
+            if (Vector3.Distance(CharacterPosition, new Vector3Int(PathCells[Index].x, PathCells[Index].y, PathCells[Index].z)) > .1f)
+            {
+                
+                Vector3 Converted = Grid.CellToLocal(new Vector3Int(PathCells[Index].x, PathCells[Index].y, PathCells[Index].z));
+                Vector3 CellPosition = new Vector3(Converted.x, Converted.y, Converted.z);
 
-        }
-        else
-        {
-            Index = 0;
-            ControlledСharacter.LastPointReached();
+                CharacterMovement.SetCellToMove(CellPosition);
+            }
 
-            MarkAttackable();
-            MarkWalk();
+            else
+            {
+                Index++;
 
-            SetNewCharcter();
+                if (Index >= PathCells.Count())
+                {
+                    IsLastPointReached = true;
+
+                    GetCharacterPosition();
+
+                    PathFinding.UpdateCharctersPositions(CharactersPositions);
+
+                    SetNewCharcter();
+
+                    break;
+
+                }
+            }
         }
     }
 
+
+    /// <summary>
+    /// Перенсти в отдельный скрипт
+    /// </summary>
     private void MarkWalk()
     {
-        Vector3Int CharacterPosition = ControlledСharacter.GetCharacterPosition();
+        Vector3Int CharacterPosition = CharacterMovement.GetCharacterPosition();
 
-        for (int x = CharacterPosition.x - MaxMovemetDistance + 1; x <= CharacterPosition.x + MaxMovemetDistance; x++)
+        for (int x = CharacterPosition.x - MaxMovemetDistance; x <= CharacterPosition.x + MaxMovemetDistance; x++)
         {
-            for (int y = CharacterPosition.y - MaxMovemetDistance + 1; y <= CharacterPosition.y + MaxMovemetDistance; y++)
+            for (int y = CharacterPosition.y - MaxMovemetDistance; y <= CharacterPosition.y + MaxMovemetDistance; y++)
             {
                 if (PathFinding.FindPath(CharacterPosition, new Vector3Int(x, y, 0)) != null && PathFinding.FindPath(CharacterPosition, new Vector3Int(x, y, 0)).Count <= MaxMovemetDistance)
                 {
@@ -166,15 +222,24 @@ public class Testing : MonoBehaviour //Короче надо сделать но
         }
     }
 
+    /// <summary>
+    /// Перенсти в отдельный скрипт
+    /// </summary>
     private void MarkAttackable()
     {
-        Vector3Int CharacterPosition = ControlledСharacter.GetCharacterPosition();
+        Vector3Int CharacterPosition = CharacterMovement.GetCharacterPosition();
 
-        for (int x = CharacterPosition.x - MaxAttackRange + 1; x <= CharacterPosition.x + MaxAttackRange; x++)
+        for (int x = CharacterPosition.x - MaxAttackRange; x <= CharacterPosition.x + MaxAttackRange; x++)
         {
-            for (int y = CharacterPosition.y - MaxAttackRange + 1; y <= CharacterPosition.y + MaxAttackRange; y++)
+            for (int y = CharacterPosition.y - MaxAttackRange; y <= CharacterPosition.y + MaxAttackRange; y++)
             {
-                if (PathFinding.FindPath(CharacterPosition, new Vector3Int(x, y, 0)) != null && PathFinding.FindPath(CharacterPosition, new Vector3Int(x, y, 0)).Count <= MaxAttackRange)
+                if (!customGrid.GetObjectTileMap().GetTile(new Vector3Int(x, y, 0))
+
+                   && customGrid.GetFloorTileMap().GetTile(new Vector3Int(x, y, 0))
+
+                   && new Vector3Int(x,y,0)!= CharacterPosition
+                )
+
                 {
                     customGrid.AddToTileMap(x, y, AttackableTile, InterfaceTilemap.GetComponent<Tilemap>());
                 }
@@ -184,13 +249,93 @@ public class Testing : MonoBehaviour //Короче надо сделать но
 
     private void SetNewCharcter()
     {
+        Character = GetNewPlayableCharacter();
 
-        Character = OrderOfMovement.GetNewPlayableCharacter();
+        CharacterMovement = Character.GetComponent<CharacterMovement>();
+        CharacterShooting= Character.GetComponent<CharacterShooting>();
 
-        ControlledСharacter = Character.GetComponent<CharacterMovement>();
         MaxMovemetDistance = Character.GetMaxMovementDistance();
         MaxAttackRange = Character.GetMaxAttackRange();
 
+        InterfaceTilemap.GetComponent<Tilemap>().ClearAllTiles();
+
+        MarkAttackable();
+        MarkWalk();
+
     }
 
+    private void ChekAliveCharackters()
+    {
+        for (int i = 0; i < CharactersClases.Count; i++)
+        {
+            if (CharactersClases[i].gameObject.activeSelf == false)
+            {
+                CharactersClases.RemoveAt(i);
+
+                GetCharacterPosition();
+
+                PathFinding.UpdateCharctersPositions(CharactersPositions);
+
+
+            }
+        }
+    }
+
+    private CharacterClass GetNewPlayableCharacter()
+    {
+        CharacterClass CurrentCharacter;
+
+        if (CharacterNumber < CharactersClases.Count)
+        {
+            CurrentCharacter = CharactersClases[CharacterNumber];
+            CharacterNumber++;
+
+        }
+        else
+        {
+            CharacterNumber = 0;
+            CurrentCharacter = CharactersClases[CharacterNumber];
+            CharacterNumber++;
+        }
+
+        //if (CurrentCharacter.GetComponent<GameObject>().activeSelf==false)
+        //{
+        //    CurrentCharacter=GetNewPlayableCharacter();
+        //}
+
+        return CurrentCharacter;
+    }
+
+    private void GetCharacterPosition()
+    {
+        CharactersPositions = new Vector3Int[CharactersClases.Count];
+
+        for (int i = 0; i < CharactersClases.Count; i++)
+        {
+            CharactersPositions[i] = CharactersClases[i].GetComponent<CharacterMovement>().GetCharacterPosition();
+        }
+    }
+
+    /// <summary>
+    /// Написать нормально
+    /// </summary>
+    /// <param name="TargetPosition"></param>
+    private void TryToAttack(Vector3Int TargetPosition)
+    {
+        if (CharactersPositions.Contains(TargetPosition))
+        {
+            for (int i = 0; i < CharactersClases.Count; i++)
+            {
+               if(TargetPosition == CharactersClases[i].GetComponent<CharacterMovement>().GetCharacterPosition() && TargetPosition!= CharacterMovement.GetCharacterPosition())
+               {
+                    CharacterShooting.DoDamage(CharactersClases[i],Character.GetDamage());
+                    break;
+               }
+            }
+
+            ChekAliveCharackters();
+
+            SetNewCharcter();
+        }
+    }
 }

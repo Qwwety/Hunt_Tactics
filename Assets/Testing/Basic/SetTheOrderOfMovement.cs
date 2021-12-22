@@ -1,21 +1,13 @@
 ﻿
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-public class SetTheOrderOfMovement : MonoBehaviour
+public class SetTheOrderOfMovement
 {
-    [SerializeField] private CharacterClass[] Characters;
-
-    int Index = 0;
-
-
-    public void ActivateQueueSort()
+    public SetTheOrderOfMovement(List<CharacterClass> characters)
     {
-        Queue(Characters, 0, Characters.Length - 1);
+        Queue(characters, 0, characters.Count - 1);
     }
 
-    private int GetMarker(CharacterClass[] Characters, int StartPoint, int EndPoint)
+    private int GetMarker(List<CharacterClass> Characters, int StartPoint, int EndPoint)
     {
         CharacterClass TemporyValue;
         int marker = StartPoint;
@@ -38,7 +30,7 @@ public class SetTheOrderOfMovement : MonoBehaviour
         return marker;
     }
 
-    public void Queue(CharacterClass[] Characters, int StartPoint, int EndPoint)
+    private void Queue(List<CharacterClass> Characters, int StartPoint, int EndPoint)
     {
         if (StartPoint >= EndPoint)
         {
@@ -49,21 +41,4 @@ public class SetTheOrderOfMovement : MonoBehaviour
         Queue(Characters, StartPoint, ponter - 1);
         Queue(Characters, ponter + 1, EndPoint);
     }
-
-    public CharacterClass GetNewPlayableCharacter()
-    {
-        CharacterClass CurrentCharacter;
-        if (Index < Characters.Length)
-        {
-            CurrentCharacter = Characters[Index];
-            Index++;
-        }
-        else
-        {
-            Index = 0;
-            CurrentCharacter = Characters[Index];
-        }
-        return CurrentCharacter;
-    }
-
 }

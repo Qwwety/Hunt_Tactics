@@ -61,14 +61,16 @@
     <Compile Include="Assets\Testing\Main\PathCell.cs" />
     <Compile Include="Assets\Character\Scripts\CharacterShooting.cs" />
     <Compile Include="Assets\Testing\Basic\SetTheOrderOfMovement.cs" />
-    <Compile Include="Assets\Character\Classes\Abstract\CharacterClass.cs" />
+    <Compile Include="Assets\Character\AbstractClasses\CharacterClass.cs" />
     <Compile Include="Assets\Testing\Main\CustomGrid.cs" />
-    <Compile Include="Assets\Character\Classes\Definite\Ranger\Scripts\Ranger.cs" />
+    <Compile Include="Assets\Character\Specialists\Ranger\SpecialistScripts\Ranger.cs" />
     <Compile Include="Assets\Testing\Basic\Testing.cs" />
     <Compile Include="Assets\Testing\Main\PathFinding.cs" />
     <Compile Include="Assets\Character\Scripts\Behaviour\Idal.cs" />
-    <Compile Include="Assets\Character\Classes\Definite\FireEater\Scripts\FireEater.cs" />
+    <Compile Include="Assets\Character\Specialists\FireEater\SpecialistScripts\FireEater.cs" />
     <Compile Include="Assets\Testing\Basic\GoToNextCharacter.cs" />
+    <Compile Include="Assets\Enemy\Scripts\Ebaka.cs" />
+    <Compile Include="Assets\Character\Interfaces\ITakeDamage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -295,6 +297,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets\Plugins\DOTween\DOTween.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.21f1\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
@@ -733,6 +738,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{8DC57998-8F63-7CF2-C992-980DD97D8CD9}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

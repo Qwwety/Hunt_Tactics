@@ -2,7 +2,7 @@
 using UnityEngine.Tilemaps;
 
 [System.Serializable]
-public class CustomGrid : MonoBehaviour
+public class CustomGrid
 {
     [Header("Main")]
     private int Height;
@@ -15,6 +15,7 @@ public class CustomGrid : MonoBehaviour
     [Space]
     private Tilemap FloorTilemap;
     private Tilemap ObjectTilemap;
+     
 
 
     public CustomGrid(int Width, int Height, Grid Grid, Tile[] Tiles, Tilemap FloorTilemap, Tilemap ObjectTilemap)
@@ -47,10 +48,7 @@ public class CustomGrid : MonoBehaviour
     {
         return Height;
     }
-    public Grid GetGrid()
-    {
-        return Grid;
-    }
+
     /// <summary>
     /// Возвращете карту земли
     /// </summary>
