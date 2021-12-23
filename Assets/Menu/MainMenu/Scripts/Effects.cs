@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Effects : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private CanvasGroup CanvasGroup;
+
     void Start()
     {
-        
+        CanvasGroup = GetComponent<CanvasGroup>();
+        FadeInEffect();
     }
 
-    // Update is called once per frame
-    void Update()
+
+    private void FadeInEffect()
     {
-        
+        CanvasGroup.DOFade(1, 3);
     }
+    
 }

@@ -322,11 +322,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c26bcb5a765d14d91841a10985e993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 20
-  Damage: 70
+  MaxHealth: 1
+  Damage: 1e+23
   InitiativeAmount: 1
-  MaxMovementDistance: 6
-  MaxAttackRange: 6
+  MaxMovementDistance: 10
+  MaxAttackRange: 10
   MaxPrice: 100
   price: 0
   Fraction: 1
@@ -404,8 +404,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: bc9223b93f7f6c64d8e8d0f21b167634, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: -8777784417420518194, guid: 42af07611f7bac847b2fbe4a0d28b837, type: 3}
+  m_Color: {r: 0.45660377, g: 1, b: 0.4610238, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1021,7 +1021,7 @@ Animator:
   m_GameObject: {fileID: 1000619010}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a2cfb2f821bb5cf489b017bb85c76542, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1070,7 +1070,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: bb7d80355cad5854587232913fa8b9b9, type: 3}
+  m_Sprite: {fileID: 7054653923411772443, guid: ce92bda1d85d25e41b32cb25cc87851e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1132,11 +1132,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7b95f15e8db1474a94cf78a410848b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 90
+  MaxHealth: 1
   Damage: 342434
   InitiativeAmount: 10
-  MaxMovementDistance: 10
-  MaxAttackRange: 10
+  MaxMovementDistance: 2
+  MaxAttackRange: 2
   MaxPrice: 0
   price: 0
   Fraction: 0
@@ -1703,12 +1703,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -2311659948842064771, guid: f929797c048a18c409a56455cf135b93, type: 3}
+  m_Sprite: {fileID: -8777784417420518194, guid: 42af07611f7bac847b2fbe4a0d28b837, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.6, y: 1}
+  m_Size: {x: 0.96666664, y: 1.0666667}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1772,11 +1772,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0697fcd189d956545904781e0453b9f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 10
-  Damage: 1000
+  MaxHealth: 1
+  Damage: 1e+16
   InitiativeAmount: 10
-  MaxMovementDistance: 3
-  MaxAttackRange: 3
+  MaxMovementDistance: 2
+  MaxAttackRange: 2
   MaxPrice: 100
   price: 0
   Fraction: 1

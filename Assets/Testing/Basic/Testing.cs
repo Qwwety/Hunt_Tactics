@@ -272,6 +272,8 @@ public class Testing : MonoBehaviour //Сделать меню и запихну
             {
                 CharactersClases.RemoveAt(i);
 
+
+
                 GetCharacterPosition();
 
                 PathFinding.UpdateCharctersPositions(CharactersPositions);
@@ -285,23 +287,18 @@ public class Testing : MonoBehaviour //Сделать меню и запихну
     {
         CharacterClass CurrentCharacter;
 
-        if (CharacterNumber < CharactersClases.Count)
+        if (Character != CharactersClases.Last())
         {
-            CurrentCharacter = CharactersClases[CharacterNumber];
-            CharacterNumber++;
-
+            int ChracterIndex = CharactersClases.IndexOf(Character);
+            ChracterIndex++;
+            CurrentCharacter = CharactersClases[ChracterIndex];
+            
         }
         else
         {
-            CharacterNumber = 0;
-            CurrentCharacter = CharactersClases[CharacterNumber];
-            CharacterNumber++;
+            CurrentCharacter = CharactersClases.First();
         }
 
-        //if (CurrentCharacter.GetComponent<GameObject>().activeSelf==false)
-        //{
-        //    CurrentCharacter=GetNewPlayableCharacter();
-        //}
 
         return CurrentCharacter;
     }

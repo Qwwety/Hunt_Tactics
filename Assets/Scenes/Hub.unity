@@ -225,7 +225,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 316d4808f5e2ba94389b94f1c1b00f3b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2fa4206d812f0f4799d21b5dee4d28d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ccbd9e2df55170a408ec9b42aa77ef60, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 04ecfbda48ad4b94eae5ebc833edf852, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0dc3e325e4012614e874bd28ce0e1762, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5ccd5700014caca4ba63e8e636f9c537, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -623,7 +623,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0d562889b2d143a458c7f2c962d6bf51, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3062df9f5a2d5794eb95bdb8afef2f8f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -745,7 +745,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8a2a7305ade17d941b2adfa5cdb5a2aa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d245b78644160a24f851b82a3c3a7eb5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5b9d76cfab7a63c4c8d97df07def7d97, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b505697bf8f01254bb989f0ab1f553fc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1068,6 +1068,7 @@ GameObject:
   - component: {fileID: 1883300123}
   - component: {fileID: 1883300122}
   - component: {fileID: 1883300121}
+  - component: {fileID: 1883300124}
   m_Layer: 5
   m_Name: Kazarmi
   m_TagString: Untagged
@@ -1137,7 +1138,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1883300122}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1883300124}
+        m_TargetAssemblyTypeName: GoToSelectedScene, Assembly-CSharp
+        m_MethodName: LoadDefinedScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1883300122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1158,7 +1171,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c7507bf3894abc14b8c30f97a7d797d0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 370729c89a30ec44cae505ab119f4d70, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1176,6 +1189,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1883300119}
   m_CullTransparentMesh: 1
+--- !u!114 &1883300124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883300119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 655fb232039f1fc479541d0a8735f11a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScenNumber: 0
 --- !u!1 &2078548107
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,8 +1238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -952, y: -191.87}
-  m_SizeDelta: {x: 478.5524, y: 383.73}
+  m_AnchoredPosition: {x: -944.566, y: -244.46323}
+  m_SizeDelta: {x: 614.4153, y: 335.3036}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2078548109
 MonoBehaviour:
@@ -1304,7 +1330,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1d964cb8f00421f408b6012d3cc51463, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2c2db132bf153e4c8d6088bbd863f82, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
